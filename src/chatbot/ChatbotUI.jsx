@@ -96,6 +96,20 @@ export function Message({ msg, onMenuClick, onSubClick, onBack }) {
           </button>
         </div>
       )}
+
+      {/* {msg.followUp && (
+        <div className="pr-quick-replies mt-2">
+          {msg.followUp.map((btn) => (
+            <button
+              key={btn.id}
+              className="pr-qr-btn"
+              onClick={() => onSubClick(btn.id, btn.label)}
+            >
+              {btn.label}
+            </button>
+          ))}
+        </div>
+      )} */}
     </div>
   );
 }

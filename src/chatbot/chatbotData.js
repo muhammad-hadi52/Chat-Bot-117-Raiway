@@ -96,6 +96,14 @@ export const RESPONSES = {
   book_online: {
     text: `You can book tickets online via:\n\n• Pakistan Railways official website\n• Rabta app\n• Easypaisa (for payment)\n\nCreate a personal account first. Commercial use of personal accounts is strictly prohibited and will result in permanent blocking.`,
   },
+  refund_combined: {
+    text:
+      `I can help with refunds. Which type of ticket do you have?\n\n` +
+      `🔵 E-Ticket (booked online via Rabta / Easypaisa / website)\n` +
+      `🟡 Paper Ticket (booked at a reservation counter)\n\n` +
+      `Reply with "eticket refund" or "paper ticket refund"`,
+    // buttons to show
+  },
 };
 
 // ─────────────────────────────────────────────
@@ -118,22 +126,75 @@ export const FALLBACK_MSG = {
 // ─────────────────────────────────────────────
 //  KEYWORD → RESPONSE MAP  (for free-text input)
 // ─────────────────────────────────────────────
+// export const KEYWORD_RULES = [
+//   { keywords: ["easypaisa", "rabta"], responseId: "easypaisa_refund" },
+//   { keywords: ["guard chart", "guard"], responseId: "guard_chart" },
+//   { keywords: ["delay", "late", "location", "live"], special: "realtime" },
+//   {
+//     keywords: ["refund", "cancel"],
+//     responseId: "eticket_refund",
+//   },
+//   {
+//     keywords: ["half fare", "senior", "kid", "child"],
+//     responseId: "half_fare",
+//   },
+//   { keywords: ["account", "register"], responseId: "create_account" },
+//   { keywords: ["cnic"], responseId: "cnic_req" },
+//   { keywords: ["green line"], responseId: "green_line" },
+//   { keywords: ["paper ticket", "refund"], responseId: "paper_refund" },
+//   { keywords: ["shalimar"], responseId: "shalimar" },
+//   { keywords: ["attock", "safari"], responseId: "attock_safari" },
+// ];
 export const KEYWORD_RULES = [
-  { keywords: ["easypaisa", "rabta"], responseId: "easypaisa_refund" },
-  { keywords: ["guard chart", "guard"], responseId: "guard_chart" },
-  { keywords: ["delay", "late", "location", "live"], special: "realtime" },
+  // HIGH priority — specific enough to answer directly
   {
-    keywords: ["refund", "cancel"],
+    keywords: ["easypaisa", "rabta"],
+    responseId: "easypaisa_refund",
+    priority: "high",
+  },
+  {
+    keywords: ["guard chart", "guard"],
+    responseId: "guard_chart",
+    priority: "high",
+  },
+  {
+    keywords: ["e-ticket", "eticket", "online ticket"],
     responseId: "eticket_refund",
+    priority: "high",
+  },
+  {
+    keywords: ["paper ticket", "counter ticket", "reservation center"],
+    responseId: "paper_refund",
+    priority: "high",
   },
   {
     keywords: ["half fare", "senior", "kid", "child"],
     responseId: "half_fare",
+    priority: "high",
   },
-  { keywords: ["account", "register"], responseId: "create_account" },
-  { keywords: ["cnic"], responseId: "cnic_req" },
-  { keywords: ["green line"], responseId: "green_line" },
-  { keywords: ["paper ticket", "refund"], responseId: "paper_refund" },
-  { keywords: ["shalimar"], responseId: "shalimar" },
-  { keywords: ["attock", "safari"], responseId: "attock_safari" },
+  {
+    keywords: ["account", "register"],
+    responseId: "create_account",
+    priority: "high",
+  },
+  { keywords: ["cnic"], responseId: "cnic_req", priority: "high" },
+  { keywords: ["green line"], responseId: "green_line", priority: "high" },
+  { keywords: ["shalimar"], responseId: "shalimar", priority: "high" },
+  {
+    keywords: ["attock", "safari"],
+    responseId: "attock_safari",
+    priority: "high",
+  },
+  {
+    keywords: ["delay", "late", "location", "live"],
+    special: "realtime",
+    priority: "high",
+  },
+
+  // LOW priority — generic, only used if nothing high-priority matched
+  {
+    keywords: ["refund", "cancel"],
+    responseId: "refund_combined",
+    priority: "low",
+  },
 ];

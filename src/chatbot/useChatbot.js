@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from "react";
 import {
   MAIN_MENU,
   SUBMENU,
@@ -7,19 +7,52 @@ import {
   HELPLINE_FULL,
   FALLBACK_MSG,
   KEYWORD_RULES,
-} from './chatbotData';
+} from "./chatbotData";
 
 // ─────────────────────────────────────────────
 //  HELPER: resolve a free-text message to a response
 // ─────────────────────────────────────────────
+// function resolveKeyword(text) {
+//   const lower = text.toLowerCase();
+//   for (const rule of KEYWORD_RULES) {
+//     if (rule.keywords.some((kw) => lower.includes(kw))) {
+//       if (rule.special === 'realtime') return REAL_TIME_MSG;
+//       return RESPONSES[rule.responseId] || FALLBACK_MSG;
+//     }
+//   }
+//   return FALLBACK_MSG;
+// }
 function resolveKeyword(text) {
   const lower = text.toLowerCase();
+  const highMatches = [];
+  let lowMatch = null;
+
   for (const rule of KEYWORD_RULES) {
-    if (rule.keywords.some((kw) => lower.includes(kw))) {
-      if (rule.special === 'realtime') return REAL_TIME_MSG;
-      return RESPONSES[rule.responseId] || FALLBACK_MSG;
+    const hit = rule.keywords.some((kw) => lower.includes(kw));
+    if (!hit) continue;
+
+    if (rule.priority === "high") {
+      if (rule.special === "realtime") return REAL_TIME_MSG;
+      highMatches.push(RESPONSES[rule.responseId]);
+    } else if (rule.priority === "low" && !lowMatch) {
+      lowMatch = rule.responseId;
     }
   }
+
+  // High-priority hits found
+  if (highMatches.length === 1) return highMatches[0];
+
+  // Multiple specific responses (e.g. user typed "eticket and paper refund")
+  if (highMatches.length > 1) {
+    return {
+      text: highMatches.map((r) => r.text).join("\n\n─────────────\n\n"),
+      helpline: highMatches.some((r) => r.helpline),
+    };
+  }
+
+  // Only a generic/low-priority match
+  if (lowMatch) return RESPONSES[lowMatch];
+
   return FALLBACK_MSG;
 }
 
@@ -27,11 +60,11 @@ function resolveKeyword(text) {
 //  CUSTOM HOOK
 // ─────────────────────────────────────────────
 export function useChatbot() {
-  const [open, setOpen]         = useState(false);
+  const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([]);
-  const [input, setInput]       = useState('');
-  const [started, setStarted]   = useState(false);
-  const bodyRef                 = useRef(null);
+  const [input, setInput] = useState("");
+  const [started, setStarted] = useState(false);
+  const bodyRef = useRef(null);
 
   // Auto-scroll to bottom whenever messages change
   useEffect(() => {
@@ -41,14 +74,14 @@ export function useChatbot() {
   }, [messages]);
 
   // ── Low-level helpers ──────────────────────
-  const addMsg       = (msg)  => setMessages((prev) => [...prev, msg]);
-  const removeTyping = (list) => list.filter((m) => m.type !== 'typing');
+  const addMsg = (msg) => setMessages((prev) => [...prev, msg]);
+  const removeTyping = (list) => list.filter((m) => m.type !== "typing");
 
   // ── Show main menu ─────────────────────────
   const showMainMenu = () => {
     addMsg({
-      type: 'bot',
-      text: 'What can I help you with today? Please choose a category:',
+      type: "bot",
+      text: "What can I help you with today? Please choose a category:",
       menu: true,
     });
   };
@@ -60,7 +93,7 @@ export function useChatbot() {
       setStarted(true);
       setTimeout(() => {
         addMsg({
-          type: 'bot',
+          type: "bot",
           text: "🚆 Welcome to Pakistan Railways!\n\nI'm your virtual assistant. I can help you with tickets, refunds, policies, and more.",
         });
         setTimeout(showMainMenu, 600);
@@ -71,35 +104,37 @@ export function useChatbot() {
   const toggleOpen = () => (open ? setOpen(false) : openChat());
 
   // ── Disable menu/submenu on a message ─────
-  const disableMenu    = (list) => list.map((m) => (m.menu    ? { ...m, menu: false }    : m));
-  const disableSubmenu = (list) => list.map((m) => (m.submenu ? { ...m, submenu: null }  : m));
+  const disableMenu = (list) =>
+    list.map((m) => (m.menu ? { ...m, menu: false } : m));
+  const disableSubmenu = (list) =>
+    list.map((m) => (m.submenu ? { ...m, submenu: null } : m));
 
   // ── Handle main menu card click ────────────
   const handleMenuClick = (id) => {
     setMessages((prev) => disableMenu(prev));
 
-    if (id === 'status') {
-      addMsg({ type: 'user', text: '🚆 Train Status & Delays' });
-      setTimeout(() => addMsg({ type: 'bot', ...REAL_TIME_MSG }), 600);
+    if (id === "status") {
+      addMsg({ type: "user", text: "🚆 Train Status & Delays" });
+      setTimeout(() => addMsg({ type: "bot", ...REAL_TIME_MSG }), 600);
       setTimeout(showMainMenu, 1400);
       return;
     }
 
-    if (id === 'helpline') {
-      addMsg({ type: 'user', text: '📞 Contact & Helpline' });
-      setTimeout(() => addMsg({ type: 'bot', ...HELPLINE_FULL }), 600);
+    if (id === "helpline") {
+      addMsg({ type: "user", text: "📞 Contact & Helpline" });
+      setTimeout(() => addMsg({ type: "bot", ...HELPLINE_FULL }), 600);
       setTimeout(showMainMenu, 1400);
       return;
     }
 
-    const sub   = SUBMENU[id];
-    const item  = MAIN_MENU.find((m) => m.id === id);
+    const sub = SUBMENU[id];
+    const item = MAIN_MENU.find((m) => m.id === id);
     if (!sub || !item) return;
 
-    addMsg({ type: 'user', text: `${item.icon} ${item.label}` });
+    addMsg({ type: "user", text: `${item.icon} ${item.label}` });
     setTimeout(() => {
       addMsg({
-        type: 'bot',
+        type: "bot",
         text: `Here are topics under "${item.label}". Pick one:`,
         submenu: sub,
       });
@@ -109,15 +144,15 @@ export function useChatbot() {
   // ── Handle submenu quick-reply click ───────
   const handleSubClick = (id, label) => {
     setMessages((prev) => disableSubmenu(prev));
-    addMsg({ type: 'user', text: label });
-    addMsg({ type: 'typing' });
+    addMsg({ type: "user", text: label });
+    addMsg({ type: "typing" });
 
     setTimeout(() => {
       const resp = RESPONSES[id] || {
         text: "I don't have specific info on that yet. Please contact our helpline.",
         helpline: true,
       };
-      setMessages((prev) => [...removeTyping(prev), { type: 'bot', ...resp }]);
+      setMessages((prev) => [...removeTyping(prev), { type: "bot", ...resp }]);
       setTimeout(showMainMenu, 600);
     }, 900);
   };
@@ -132,19 +167,19 @@ export function useChatbot() {
   const handleSend = () => {
     const text = input.trim();
     if (!text) return;
-    setInput('');
-    addMsg({ type: 'user', text });
-    addMsg({ type: 'typing' });
+    setInput("");
+    addMsg({ type: "user", text });
+    addMsg({ type: "typing" });
 
     setTimeout(() => {
       const resp = resolveKeyword(text);
-      setMessages((prev) => [...removeTyping(prev), { type: 'bot', ...resp }]);
+      setMessages((prev) => [...removeTyping(prev), { type: "bot", ...resp }]);
       setTimeout(showMainMenu, 700);
     }, 900);
   };
 
   const handleInputKey = (e) => {
-    if (e.key === 'Enter') handleSend();
+    if (e.key === "Enter") handleSend();
   };
 
   return {

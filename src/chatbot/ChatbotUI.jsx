@@ -1,6 +1,6 @@
-import React from 'react';
-import { MAIN_MENU } from './chatbotData';
-import './chatbot.css';
+import React from "react";
+import { MAIN_MENU } from "./chatbotData";
+import "./chatbot.css";
 
 // ─────────────────────────────────────────────
 //  HELPLINE CARD  (shown when msg.helpline = true)
@@ -13,11 +13,10 @@ export function HelplineCard() {
         Call: <a href="tel:117">117</a> (UAN)
       </div>
       <div>
-        Email:{' '}
-        <a href="mailto:info@pakrail.gov.pk">info@pakrail.gov.pk</a>
+        Email: <a href="mailto:info@pakrail.gov.pk">info@pakrail.gov.pk</a>
       </div>
-      <div className="mt-1 text-muted" style={{ fontSize: '12px' }}>
-        Available: Mon–Sat, 9 AM – 5 PM
+      <div className="mt-1 text-muted" style={{ fontSize: "12px" }}>
+        Available: 24/7
       </div>
     </div>
   );
@@ -42,16 +41,19 @@ export function TypingBubble() {
 //  SINGLE MESSAGE ROW
 // ─────────────────────────────────────────────
 export function Message({ msg, onMenuClick, onSubClick, onBack }) {
-  if (msg.type === 'user') {
+  if (msg.type === "user") {
     return <div className="pr-bubble pr-bubble--user">{msg.text}</div>;
   }
 
-  if (msg.type === 'typing') return <TypingBubble />;
+  if (msg.type === "typing") return <TypingBubble />;
 
   return (
     <div className="pr-bot-row">
       {/* Text bubble */}
-      <div className="pr-bubble pr-bubble--bot" style={{ whiteSpace: 'pre-line' }}>
+      <div
+        className="pr-bubble pr-bubble--bot"
+        style={{ whiteSpace: "pre-line" }}
+      >
         {msg.text}
       </div>
 
@@ -68,7 +70,7 @@ export function Message({ msg, onMenuClick, onSubClick, onBack }) {
               onClick={() => onMenuClick(m.id)}
               role="button"
               tabIndex={0}
-              onKeyDown={(e) => e.key === 'Enter' && onMenuClick(m.id)}
+              onKeyDown={(e) => e.key === "Enter" && onMenuClick(m.id)}
             >
               <span className="pr-menu-card__icon">{m.icon}</span>
               <span className="pr-menu-card__label">{m.label}</span>
@@ -101,9 +103,21 @@ export function Message({ msg, onMenuClick, onSubClick, onBack }) {
 // ─────────────────────────────────────────────
 //  CHAT WINDOW
 // ─────────────────────────────────────────────
-export function ChatWindow({ open, messages, input, bodyRef, setInput, onMenuClick, onSubClick, onBack, onSend, onInputKey, onClose }) {
+export function ChatWindow({
+  open,
+  messages,
+  input,
+  bodyRef,
+  setInput,
+  onMenuClick,
+  onSubClick,
+  onBack,
+  onSend,
+  onInputKey,
+  onClose,
+}) {
   return (
-    <div className={`pr-chat-window ${open ? '' : 'pr-chat-window--hidden'}`}>
+    <div className={`pr-chat-window ${open ? "" : "pr-chat-window--hidden"}`}>
       {/* Header */}
       <div className="pr-chat-header">
         <div className="pr-chat-header__avatar">🚆</div>
@@ -147,7 +161,11 @@ export function ChatWindow({ open, messages, input, bodyRef, setInput, onMenuCli
           onKeyDown={onInputKey}
           aria-label="Chat input"
         />
-        <button className="pr-send-btn" onClick={onSend} aria-label="Send message">
+        <button
+          className="pr-send-btn"
+          onClick={onSend}
+          aria-label="Send message"
+        >
           <svg viewBox="0 0 24 24">
             <path d="M2 21l21-9L2 3v7l15 2-15 2z" />
           </svg>
@@ -162,7 +180,12 @@ export function ChatWindow({ open, messages, input, bodyRef, setInput, onMenuCli
 // ─────────────────────────────────────────────
 export function ChatFAB({ open, onClick }) {
   return (
-    <button className="pr-chat-fab" onClick={onClick} title="Chat with us" aria-label="Open chatbot">
+    <button
+      className="pr-chat-fab"
+      onClick={onClick}
+      title="Chat with us"
+      aria-label="Open chatbot"
+    >
       {open ? (
         <svg viewBox="0 0 24 24">
           <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
@@ -179,7 +202,7 @@ export function ChatFAB({ open, onClick }) {
 // ─────────────────────────────────────────────
 //  ROOT CHATBOT COMPONENT  (compose everything)
 // ─────────────────────────────────────────────
-import { useChatbot } from './useChatbot';
+import { useChatbot } from "./useChatbot";
 
 export default function Chatbot() {
   const {

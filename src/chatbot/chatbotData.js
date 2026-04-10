@@ -2,12 +2,12 @@
 //  MAIN MENU ITEMS
 // ─────────────────────────────────────────────
 export const MAIN_MENU = [
-  { id: 'tickets',   icon: '🎫', label: 'Tickets & Booking' },
-  { id: 'refunds',   icon: '💰', label: 'Refunds & Cancellations' },
-  { id: 'status',    icon: '🚆', label: 'Train Status & Delays' },
-  { id: 'schedules', icon: '🗺️', label: 'Routes & Schedules' },
-  { id: 'account',   icon: '👤', label: 'My Account' },
-  { id: 'helpline',  icon: '📞', label: 'Contact & Helpline' },
+  { id: "tickets", icon: "🎫", label: "Tickets & Booking" },
+  { id: "refunds", icon: "💰", label: "Refunds & Cancellations" },
+  // { id: "status", icon: "🚆", label: "Train Status & Delays" },
+  { id: "schedules", icon: "🗺️", label: "Routes & Schedules" },
+  { id: "account", icon: "👤", label: "My Account" },
+  { id: "helpline", icon: "📞", label: "Contact & Helpline" },
 ];
 
 // ─────────────────────────────────────────────
@@ -15,28 +15,28 @@ export const MAIN_MENU = [
 // ─────────────────────────────────────────────
 export const SUBMENU = {
   tickets: [
-    { id: 'book_online', label: 'How to book online?' },
-    { id: 'half_fare',   label: 'Half fare eligibility' },
-    { id: 'cnic_req',    label: 'CNIC requirement' },
-    { id: 'economy_ac',  label: 'Economy vs AC seats' },
+    { id: "book_online", label: "How to book online?" },
+    { id: "half_fare", label: "Half fare eligibility" },
+    { id: "cnic_req", label: "CNIC requirement" },
+    { id: "economy_ac", label: "Economy vs AC seats" },
   ],
   refunds: [
-    { id: 'eticket_refund',   label: 'E-Ticket refund policy' },
-    { id: 'paper_refund',     label: 'Paper ticket refund' },
-    { id: 'train_cancelled',  label: 'Train cancelled / 6hr delay' },
-    { id: 'easypaisa_refund', label: 'Easypaisa / Rabta refund' },
-    { id: 'guard_chart',      label: 'What is Guard Chart?' },
+    { id: "eticket_refund", label: "E-Ticket refund policy" },
+    { id: "paper_refund", label: "Paper ticket refund" },
+    { id: "train_cancelled", label: "Train cancelled / 6hr delay" },
+    { id: "easypaisa_refund", label: "Easypaisa / Rabta refund" },
+    { id: "guard_chart", label: "What is Guard Chart?" },
   ],
-  status:    null,
+  status: null,
   schedules: [
-    { id: 'attock_safari', label: 'Attock Safari Train' },
-    { id: 'shalimar',      label: 'Shalimar Express' },
-    { id: 'green_line',    label: 'Green Line fare rules' },
+    { id: "attock_safari", label: "Attock Safari Train" },
+    { id: "shalimar", label: "Shalimar Express" },
+    { id: "green_line", label: "Green Line fare rules" },
   ],
   account: [
-    { id: 'create_account', label: 'Create new account' },
-    { id: 'verify_account', label: 'Verification issues' },
-    { id: 'change_contact', label: 'Change mobile / email' },
+    { id: "create_account", label: "Create new account" },
+    { id: "verify_account", label: "Verification issues" },
+    { id: "change_contact", label: "Change mobile / email" },
   ],
   helpline: null,
 };
@@ -119,15 +119,21 @@ export const FALLBACK_MSG = {
 //  KEYWORD → RESPONSE MAP  (for free-text input)
 // ─────────────────────────────────────────────
 export const KEYWORD_RULES = [
-  { keywords: ['easypaisa', 'rabta'],                        responseId: 'easypaisa_refund' },
-  { keywords: ['guard chart', 'guard'],                      responseId: 'guard_chart' },
-  { keywords: ['delay', 'late', 'location', 'live'],         special: 'realtime' },
-  { keywords: ['refund', 'cancel'],                          responseId: 'eticket_refund' },
-  { keywords: ['half fare', 'senior', 'kid', 'child'],       responseId: 'half_fare' },
-  { keywords: ['account', 'register'],                       responseId: 'create_account' },
-  { keywords: ['cnic'],                                      responseId: 'cnic_req' },
-  { keywords: ['green line'],                                responseId: 'green_line' },
-  { keywords: ['paper ticket'],                              responseId: 'paper_refund' },
-  { keywords: ['shalimar'],                                  responseId: 'shalimar' },
-  { keywords: ['attock', 'safari'],                          responseId: 'attock_safari' },
+  { keywords: ["easypaisa", "rabta"], responseId: "easypaisa_refund" },
+  { keywords: ["guard chart", "guard"], responseId: "guard_chart" },
+  { keywords: ["delay", "late", "location", "live"], special: "realtime" },
+  {
+    keywords: ["refund", "cancel"],
+    responseId: "eticket_refund",
+  },
+  {
+    keywords: ["half fare", "senior", "kid", "child"],
+    responseId: "half_fare",
+  },
+  { keywords: ["account", "register"], responseId: "create_account" },
+  { keywords: ["cnic"], responseId: "cnic_req" },
+  { keywords: ["green line"], responseId: "green_line" },
+  { keywords: ["paper ticket", "refund"], responseId: "paper_refund" },
+  { keywords: ["shalimar"], responseId: "shalimar" },
+  { keywords: ["attock", "safari"], responseId: "attock_safari" },
 ];
